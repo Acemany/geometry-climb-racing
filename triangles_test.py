@@ -10,20 +10,25 @@ def orient(a: Vector2, b: Vector2, c: Vector2):
 
 
 def collide(cpos: Vector2, cd: int, p1: Vector2, p2: Vector2, p3: Vector2):
-    colided = 0
-    if 0 > orient(p2, p3, cpos) and\
-       0 > orient(p3, p1, cpos) and\
-       cd >= orient(p1, p2, cpos):
-        colided = 1
+    collided = False
+    # if 0 > orient(p2, p3, cpos) and\
+    #    0 > orient(p3, p1, cpos) and\
+    #    cd >= orient(p1, p2, cpos):
+    if cpos.distance_to(p1)-cd < max(p1.distance_to(p2), p1.distance_to(p3)) and orient(p2, p3, cpos) < cd and\
+       cpos.distance_to(p2)-cd < max(p2.distance_to(p1), p2.distance_to(p3)) and orient(p3, p1, cpos) < cd and\
+       cpos.distance_to(p3)-cd < max(p3.distance_to(p1), p3.distance_to(p2)) and orient(p1, p2, cpos) < cd:
+        collided = True
+        collided = True
 
     WIN.blit(FONT.render(f"{orient(p1, p2, cpos)}", 0, (63, 63, 63)), (20, 40))
     WIN.blit(FONT.render(f"{orient(p2, p3, cpos)}", 0, (63, 63, 63)), (20, 60))
     WIN.blit(FONT.render(f"{orient(p3, p1, cpos)}", 0, (63, 63, 63)), (20, 80))
-    draw.circle(WIN, (255, 16, 32) if colided else (16, 255, 32), cpos, 30, poly_thicness)
+
+    draw.circle(WIN, (255, 16, 32) if collided else (16, 255, 32), cpos, 30, poly_thicness)
     draw.circle(WIN, (255, 0, 0), p1, 5, poly_thicness)
     draw.circle(WIN, (0, 255, 0), p2, 5, poly_thicness)
     draw.circle(WIN, (0, 100, 255), p3, 5, poly_thicness)
-    draw.polygon(WIN, (255, 16, 32) if colided else (16, 255, 32), (p1, p2, p3), poly_thicness)
+    draw.polygon(WIN, (255, 16, 32) if collided else (16, 255, 32), (p1, p2, p3), poly_thicness)
 
 
 init()
