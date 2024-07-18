@@ -19,25 +19,19 @@ class Circ():
 
     def update(self) -> None:
         self.pv += gravity
-        # WIN.blit(FONT.render(f"{addVtoC(self.p, self.w/2, self.p+self.lwheel[0].rotate(self.a/pi*180), self.p+self.lwheel[0].rotate((self.a)/pi*180)+self.lwheel[2])}", 0, (63, 63, 63)), (20, 40))
-        # WIN.blit(FONT.render(f"{addVtoC(self.p, self.w/2, self.p+self.rwheel[0].rotate(self.a/pi*180), self.p+self.rwheel[0].rotate((self.a)/pi*180)+self.rwheel[2])}", 0, (63, 63, 63)), (20, 60))
 
         for i, c in enumerate(map_tri):
             draw.circle(WIN, (255, 0, 0), c[0], 5, polythic)
             draw.circle(WIN, (0, 255, 0), c[1], 5, polythic)
             draw.circle(WIN, (0, 0, 255), c[2], 5, polythic)
-            # WIN.blit(FONT.render(f"{orient(c[0], c[1], self.p+self.lwheel[0].rotate(self.a))}", 0, (63, 63, 63)), (20 , 100))
-            # WIN.blit(FONT.render(f"{orient(c[1], c[2], self.p+self.lwheel[0].rotate(self.a))}", 0, (63, 63, 63)), (20 , 120))
-            # WIN.blit(FONT.render(f"{orient(c[2], c[0], self.p+self.lwheel[0].rotate(self.a))}", 0, (63, 63, 63)), (20 , 140))
             if self.p.distance_to(c[0])-self.r < max(c[0].distance_to(c[1]), c[0].distance_to(c[2])) and orient(c[1], c[2], self.p) < self.r and\
                self.p.distance_to(c[1])-self.r < max(c[1].distance_to(c[0]), c[1].distance_to(c[2])) and orient(c[2], c[0], self.p) < self.r and\
                self.p.distance_to(c[2])-self.r < max(c[2].distance_to(c[0]), c[2].distance_to(c[1])) and orient(c[0], c[1], self.p) < self.r:
                 cpols.append(c)
+                self.moving = True
                 forcto = atan2(*(c[1]-c[0]).yx)-pi/2
-                _ = addVtoC(self.p, self.r, self.p, self.p+Vector2(cos(forcto), sin(forcto))*self.r/4+(c[1]-c[0]).normalize(), delta)
                 draw.line(WIN, (0, 255, 0), self.p, self.p+Vector2(cos(forcto), sin(forcto))*self.r/4+(c[1]-c[0]).normalize())
-                self.av += _[0]
-                self.pv += _[1]*delta
+                self.p += (Vector2(cos(forcto), sin(forcto))*self.r+(c[1]-c[0]).normalize())*delta
 
         self.p += self.pv
         self.a += self.av
@@ -125,8 +119,14 @@ while 1:
     [draw.polygon(WIN, (16, 255, 32), a, polythic) for a in map_tri]
     [draw.polygon(WIN, (255, 16, 32), a, polythic) for a in cpols]
     circ.draw()
-    WIN.blits([(FONT.render(f"{i}", 0, (63, 63, 63)), (20, 20+FONT.get_height()*j))
-               for j, i in enumerate((int(CLOCK.get_fps()), mouse_pos, circ.p))])
+
+    WIN.blits([(FONT.render(var, 1, (255, 255, 255)), (WIDTH/2, 24*(y+1)))
+               for y, var in enumerate((f"{i[0]} = {i[1]!r}"
+                                        for i in globals().items()
+                                        if i[0] not in ("__name__", "__doc__", "__package__", "__loader__", "__spec__", "__annotations__", "__builtins__", "__file__", "__cached__",
+                                                        "mlog_to_python", "TextInputManager", "TextInputVisualizer", "display", "draw", "event", "font", "key", "mouse", "time", "Surface",
+                                                        "Vector2", "Color", "init", "squit", "K_ESCAPE", "QUIT", "List", "Tuple", "ceil", "log10", "Path", "exit", "raw2d")))])
+
     display.flip()
     cpols = []
     delta = CLOCK.tick(60)/1000
