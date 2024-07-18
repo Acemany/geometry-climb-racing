@@ -27,7 +27,7 @@ def collide(cpos: Vector2, cd: int, p1: Vector2, p2: Vector2, p3: Vector2):
     draw.circle(WIN, (255, 16, 32) if collided else (16, 255, 32), cpos, 30, poly_thicness)
     draw.circle(WIN, (255, 0, 0), p1, 5, poly_thicness)
     draw.circle(WIN, (0, 255, 0), p2, 5, poly_thicness)
-    draw.circle(WIN, (0, 100, 255), p3, 5, poly_thicness)
+    draw.circle(WIN, (0, 0, 255), p3, 5, poly_thicness)
     draw.polygon(WIN, (255, 16, 32) if collided else (16, 255, 32), (p1, p2, p3), poly_thicness)
 
 
