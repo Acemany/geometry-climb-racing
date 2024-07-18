@@ -42,6 +42,9 @@ class Circ():
         draw.line(WIN, (16, 255, 32), self.p, self.p+Vector2(cos(self.a), sin(self.a))*self.r, polythic)
         draw.circle(WIN, (15, 255, 31), self.p, self.r, polythic)
 
+    def __repr__(self) -> str:
+        return f"Circ(pos={self.p}, mass={self.m}, f=1, radius={self.r})"
+
 
 def orient(a: Vector2, b: Vector2, c: Vector2) -> float:
     lin = b-a
