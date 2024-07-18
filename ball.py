@@ -9,13 +9,14 @@ from math import atan2, sin, cos, pi
 
 class Circ():
     def __init__(self, pos: Vector2, mass: float = 1000, f: int = 1, radius: int = 20) -> None:
-        self.p = pos  # position
-        self.pv = Vector2()  # position velocity
-        self.m = mass  # mass
-        self.a = 0  # angle
-        self.r = radius  # angle
-        self.av = 0  # angle velocity
-        self.w, self.h = self.r, self.r
+        self.p: Vector2 = pos  # position
+        self.pv: Vector2 = Vector2()  # position velocity
+        self.m: float = mass  # mass
+        self.a: float = 0  # angle
+        self.r: float = radius  # angle
+        self.av: float = 0  # angle velocity
+        self.w: float = self.r
+        self.h: float = self.r
 
     def update(self) -> None:
         self.pv += gravity
@@ -29,9 +30,11 @@ class Circ():
                self.p.distance_to(c[2])-self.r < max(c[2].distance_to(c[0]), c[2].distance_to(c[1])) and orient(c[0], c[1], self.p) < self.r:
                 cpols.append(c)
                 self.moving = True
-                forcto = atan2(*(c[1]-c[0]).yx)-pi/2
-                draw.line(WIN, (0, 255, 0), self.p, self.p+Vector2(cos(forcto), sin(forcto))*self.r/4+(c[1]-c[0]).normalize())
-                self.p += (Vector2(cos(forcto), sin(forcto))*self.r+(c[1]-c[0]).normalize())*delta
+                forcto: float = atan2(*(c[1]-c[0]).yx)-pi/2
+                strength: float = orient(c[0], c[1], self.p)
+                pull_force: Vector2 = Vector2(cos(forcto), sin(forcto))*self.r + (c[1]-c[0]).normalize()
+                draw.line(WIN, (0, 255, 0), self.p, self.p + pull_force * strength)
+                self.p += pull_force * strength * delta
 
         self.p += self.pv
         self.a += self.av
