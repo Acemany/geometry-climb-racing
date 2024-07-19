@@ -71,12 +71,12 @@ def poly_tri(ps: Tuple[Vector2]) -> Tuple[Tuple[Vector2]]:
     return out
 
 
-def addVtoC(pos: Vector2, rad: float, start: Vector2, end: Vector2, delta: float) -> Tuple[float, Vector2]:
+def addVtoC(pos: Vector2, rad: float, start: Vector2, end: Vector2) -> Tuple[float, Vector2]:
     "Move circle with radius rad and position pos from start to end"
     CtoV = start-pos
     VVec = end-start
     move_angle = atan2(*VVec.yx)-atan2(*CtoV.yx)
-    return end.distance_to(start)/rad*sin(move_angle)*delta, VVec*abs(cos(move_angle))
+    return end.distance_to(start)/rad*sin(move_angle), VVec*abs(cos(move_angle))
 
 
 init()
@@ -120,7 +120,7 @@ while 1:
                 moving = False
 
     if moving:
-        _ = addVtoC(circ.p, circ.r, circ.p+offset_rotated, mouse_pos, delta)
+        _ = addVtoC(circ.p, circ.r, circ.p+offset_rotated, mouse_pos)
         circ.av += _[0]
         circ.pv += _[1]
 
