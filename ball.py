@@ -32,15 +32,15 @@ class Circ():
                 self.moving = True
 
                 forcto: float = atan2(*(c[1]-c[0]).yx)-pi/2
-                strength: float = orient(c[0], c[1], self.p)
+                strength: float = self.r - orient(c[0], c[1], self.p)
                 pull_force: Vector2 = Vector2(cos(forcto), sin(forcto))*self.r + (c[1]-c[0]).normalize()
 
                 draw.line(WIN, (0, 255, 0), self.p, self.p + pull_force * strength)
 
-                self.pv += pull_force * strength * delta
+                self.pv += pull_force * strength
 
                 move_angle = atan2(*pull_force.yx)+pi/2
-                self.av += (pull_force*strength).length()/self.r*sin(move_angle)*delta
+                self.av += (pull_force*strength).length()/self.r*sin(move_angle)
 
         self.p += self.pv * delta
         self.a += self.av * delta
