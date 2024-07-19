@@ -21,7 +21,7 @@ class Circ():
     def update(self) -> None:
         self.pv += gravity
 
-        for i, c in enumerate(map_tri):
+        for c in map_tri:
             draw.circle(WIN, (255, 0, 0), c[0], 5, polythic)
             draw.circle(WIN, (0, 255, 0), c[1], 5, polythic)
             draw.circle(WIN, (0, 0, 255), c[2], 5, polythic)
