@@ -30,14 +30,20 @@ class Circ():
                self.p.distance_to(c[2])-self.r < max(c[2].distance_to(c[0]), c[2].distance_to(c[1])) and orient(c[0], c[1], self.p) < self.r:
                 cpols.append(c)
                 self.moving = True
+
                 forcto: float = atan2(*(c[1]-c[0]).yx)-pi/2
                 strength: float = orient(c[0], c[1], self.p)
                 pull_force: Vector2 = Vector2(cos(forcto), sin(forcto))*self.r + (c[1]-c[0]).normalize()
-                draw.line(WIN, (0, 255, 0), self.p, self.p + pull_force * strength)
-                self.p += pull_force * strength * delta
 
-        self.p += self.pv
-        self.a += self.av
+                draw.line(WIN, (0, 255, 0), self.p, self.p + pull_force * strength)
+
+                self.pv += pull_force * strength * delta
+
+                move_angle = atan2(*pull_force.yx)+pi/2
+                self.av += (pull_force*strength).length()/self.r*sin(move_angle)*delta
+
+        self.p += self.pv * delta
+        self.a += self.av * delta
         self.pv /= 1.4
         self.av /= 1.4
 
@@ -83,9 +89,9 @@ polyqual = 16
 polythic = 1
 mapfreq = WIDTH/polyqual
 circ = Circ(Vector2(200, HEIGHT/2))
-mapr = [Vector2(a*mapfreq, HEIGHT/2+sin(a/1)*100)for a in range(polyqual+1)]
+mapr = [Vector2(a*mapfreq, HEIGHT/2+sin(a*16/polyqual)*100)for a in range(polyqual+1)]
 cpols = []
-gravity = Vector2(0, 0.1)
+gravity = Vector2(0, 6)
 offset_rotated = Vector2()
 offset = Vector2()
 delta = 0
@@ -116,7 +122,7 @@ while 1:
     if moving:
         _ = addVtoC(circ.p, circ.r, circ.p+offset_rotated, mouse_pos, delta)
         circ.av += _[0]
-        circ.pv += _[1]*delta
+        circ.pv += _[1]
 
     offset_rotated.update(offset.rotate(circ.a/pi*180))
     circ.update()
