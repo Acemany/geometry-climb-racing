@@ -85,13 +85,13 @@ WIDTH, HEIGHT = SC_RES = Vector2(WIN.get_size())
 CLOCK = time.Clock()
 FONT = font.SysFont('Arial', 24, bold=True)
 
-polyqual = 16
+polyqual = 256
 polythic = 1
 mapfreq = WIDTH/polyqual
 circ = Circ(Vector2(200, HEIGHT/2))
 mapr = [Vector2(a*mapfreq, HEIGHT/2+sin(a*16/polyqual)*100)for a in range(polyqual+1)]
 cpols = []
-gravity = Vector2(0, 6)
+gravity = Vector2(0, 12)
 offset_rotated = Vector2()
 offset = Vector2()
 delta = 0
