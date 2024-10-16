@@ -4,11 +4,10 @@ from pygame import (display, draw, event, font, key, mouse, time,
                     K_ESCAPE,
                     Vector2)
 from math import atan2, sin, cos, pi
-from typing import Tuple
 from sys import exit
 
 
-def addVtoC(pos: Vector2, rad: float, start: Vector2, end: Vector2, delta: float) -> Tuple[float, Vector2]:
+def addVtoC(pos: Vector2, rad: float, start: Vector2, end: Vector2, delta: float) -> tuple[float, Vector2]:
     "Move circle with radius rad and position pos from start to end"
     CtoV = start-pos
     VVec = end-start

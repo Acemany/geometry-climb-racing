@@ -3,7 +3,6 @@ from pygame import (display, key, draw, event, font, mouse, time,
                     init, quit as squit,
                     K_ESCAPE,
                     Vector2)
-from typing import Tuple
 from math import atan2, sin, cos, pi
 
 
@@ -60,9 +59,9 @@ def orient(a: Vector2, b: Vector2, c: Vector2) -> float:
     return (lin.y*c.x-lin.x*c.y+b.x*a.y-b.y*a.x)/lin.length()
 
 
-def poly_tri(ps: Tuple[Vector2]) -> Tuple[Tuple[Vector2]]:
+def poly_tri(ps: list[Vector2]) -> list[tuple[Vector2, Vector2, Vector2]]:
     "Separate sequence of points to a bunch of triangles"
-    out = []
+    out: list[tuple[Vector2, Vector2, Vector2]] = []
     for a, b in enumerate(ps):
         if a == 0:
             continue
@@ -71,7 +70,7 @@ def poly_tri(ps: Tuple[Vector2]) -> Tuple[Tuple[Vector2]]:
     return out
 
 
-def addVtoC(pos: Vector2, rad: float, start: Vector2, end: Vector2) -> Tuple[float, Vector2]:
+def addVtoC(pos: Vector2, rad: float, start: Vector2, end: Vector2) -> tuple[float, Vector2]:
     "Move circle with radius rad and position pos from start to end"
     CtoV = start-pos
     VVec = end-start
@@ -89,13 +88,14 @@ polyqual = 256
 polythic = 1
 mapfreq = WIDTH/polyqual
 circ = Circ(Vector2(200, HEIGHT/2))
-mapr = [Vector2(a*mapfreq, HEIGHT/2+sin(a*16/polyqual)*100)for a in range(polyqual+1)]
-cpols = []
+mapr: list[Vector2] = [Vector2(a*mapfreq, HEIGHT/2+sin(a*16/polyqual)*100)for a in range(polyqual+1)]
+cpols: list[tuple[Vector2, Vector2, Vector2]] = []
 gravity = Vector2(0, 12)
 offset_rotated = Vector2()
 offset = Vector2()
 delta = 0
 moving = False
+
 
 while 1:
     WIN.fill((0, 0, 0))
@@ -120,7 +120,7 @@ while 1:
                 moving = False
 
     if moving:
-        _ = addVtoC(circ.p, circ.r, circ.p+offset_rotated, mouse_pos)
+        _: tuple[float, Vector2] = addVtoC(circ.p, circ.r, circ.p+offset_rotated, mouse_pos)
         circ.av += _[0]
         circ.pv += _[1]
 
@@ -132,7 +132,7 @@ while 1:
     [draw.polygon(WIN, (255, 16, 32), a, polythic) for a in cpols]
     circ.draw()
 
-    WIN.blits([(FONT.render(var, 1, (255, 255, 255)), (WIDTH/2, 24*(y+1)))
+    WIN.blits([(FONT.render(var, True, (255, 255, 255)), (WIDTH/2, 24*(y+1)))
                for y, var in enumerate((f"{i[0]} = {i[1]!r}"
                                         for i in globals().items()
                                         if i[0] not in ("__name__", "__doc__", "__package__", "__loader__", "__spec__", "__annotations__", "__builtins__", "__file__", "__cached__",
